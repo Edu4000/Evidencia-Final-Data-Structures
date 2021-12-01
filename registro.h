@@ -33,6 +33,12 @@ class Registro{
 			return res;
 		}
 
+		// Returns port number / O(n) & average O(1)
+		string get_errors(){
+			string res = this->errorLog;
+			return res;
+		}
+
 		// Get month / O(1)
 		string get_mes(){
 			return this->mes;
