@@ -45,10 +45,13 @@ int main(int nargs, char * args[]){
 	vector<pair<string,int>>* ips = new vector<pair<string,int>>();
 	vector<pair<string,int>>* ports = new vector<pair<string,int>>();
 	vector<pair<int,int>>* weeks = new vector<pair<int,int>>();
-
+	vector<pair<int,int>>* errors = new vector<pair<string,int>>();
+	
 	HashTable<string, Registro> bitacoraIP(113379);
 	HashTable<string, Registro> bitacoraPorts(113379);
+	HashTable<string, Registro> bitacoraError(113379);
 	HashTable<int, Registro> bitacoraSemanas(53);
+
 	
 	// HashTable para dias acumulados por mes
 	HashTable <string, int> dias_acum (32);
@@ -100,6 +103,8 @@ int main(int nargs, char * args[]){
 		bitacoraIP.put_add(dummy.get_ip(),dummy);
 		bitacoraPorts.put_add(dummy.get_port(),dummy);
 		bitacoraSemanas.put_add(week,dummy);
+		bitacoraError.put_add(errors.get_errors(),dummy);
+	
 	}
 	cout << "\nLECTURA DE ARCHIVO FINALIZADA" << endl;
 
@@ -119,7 +124,11 @@ int main(int nargs, char * args[]){
 	}
 
 	// ¿Con qué frecuencia aparecen cada uno de los distintos mensajes de error (razón de la falla)?
-	
+	cout << "\n--> Frecuencia de los mensajes de error" << endl;
+	vector<pair<string,int>> answer2 = bitacoraError.keys_freq(); // O(n)
+	for(int i = 0; i < answer2.size(); i++){
+		cout << "El error: " << answer2.at(i).first << " se repitio " << answer2.at(i).second << " vez/veces." << endl;
+	}
 
 	// ¿Cuántos números de puertos distintos fueron atacados en total?
 	cout << "\n--> Cuantos numeros de puertos distintos fueron atacados en total?" << endl;
