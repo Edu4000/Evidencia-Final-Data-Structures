@@ -1,3 +1,13 @@
+/*----------------------------------------------------------
+ * Evidencia Final
+ * Implementación de estructuras de datos en solución de evidencia final.
+ *
+ * Fecha: 1-Dic-2021
+ * Autores:
+ *           A01653868 Eduardo Angeles Guerrero
+ *           A01654419 Luis Ernesto Ladrón de Guevara González
+ *----------------------------------------------------------*/
+
 #include <iostream>
 #include <fstream>	// Leer el archivo
 #include <sstream>	// tokenizar el string de cada registro
@@ -9,14 +19,14 @@ using namespace std;
 
 // O(1)
 bool sort_frq_str(const pair<string,int> &a,
-			  const pair<string,int> &b)
+			  	  const pair<string,int> &b)
 {
 	return (a.second > b.second);
 }
 
 // O(1)
 bool sort_frq_int(const pair<int,int> &a,
-			  const pair<int,int> &b)
+			  	  const pair<int,int> &b)
 {
 	return (a.second > b.second);
 }
@@ -41,20 +51,15 @@ int main(int nargs, char * args[]){
 	Registro dummy;
 
 	// Data Structures Initialization
-	hash<string> hashF;
-	vector<pair<string,int>>* ips = new vector<pair<string,int>>();
-	vector<pair<string,int>>* ports = new vector<pair<string,int>>();
-	vector<pair<int,int>>* weeks = new vector<pair<int,int>>();
-	vector<pair<int,int>>* errors = new vector<pair<string,int>>();
-	
-	HashTable<string, Registro> bitacoraIP(113379);
-	HashTable<string, Registro> bitacoraPorts(113379);
-	HashTable<string, Registro> bitacoraError(113379);
-	HashTable<int, Registro> bitacoraSemanas(53);
+	HashTable<string, Registro> bitacoraIP(113379);		// O(1)
+	HashTable<string, Registro> bitacoraPorts(113379);	// O(1)
+	HashTable<string, Registro> bitacoraError(8);		// O(1)
+	HashTable<int, Registro> bitacoraSemanas(53);		// O(1)
 
 	
 	// HashTable para dias acumulados por mes
-	HashTable <string, int> dias_acum (32);
+	HashTable <string, int> dias_acum (32);	// O(1)
+	// Introduccion de datos O(1)
 	dias_acum.put("Jan",1);
 	dias_acum.put("Feb",32);
 	dias_acum.put("Mar",60);
@@ -97,13 +102,14 @@ int main(int nargs, char * args[]){
 		dummy = Registro(mes, dia, hora, ip, errorLog);	// O(1)
 
 		// Adding Registros
+		// O(1)
 		int week = 1 + (dummy.get_dia() + dias_acum.get(dummy.get_mes()))/7;
 
 		// Agregando a Tabla Hash / O(1)
 		bitacoraIP.put_add(dummy.get_ip(),dummy);
 		bitacoraPorts.put_add(dummy.get_port(),dummy);
 		bitacoraSemanas.put_add(week,dummy);
-		bitacoraError.put_add(errors.get_errors(),dummy);
+		bitacoraError.put_add(dummy.get_errors(),dummy);
 	
 	}
 	cout << "\nLECTURA DE ARCHIVO FINALIZADA" << endl;
@@ -118,27 +124,28 @@ int main(int nargs, char * args[]){
 	// ¿Cuáles son las cinco direcciones IP (sin importar el número de puerto) que tuvieron más accesos ilegales?
 	cout << "\n--> Direcciones IP con mas accesos ilegales" << endl;
 	vector<pair<string,int>> answer1 = bitacoraIP.keys_freq(); // O(n)
-	sort(answer1.begin(), answer1.end(), sort_frq_str);
-	for(int i = 0; i < 5; i++){
+	sort(answer1.begin(), answer1.end(), sort_frq_str); // O(n log(n))
+
+	for(int i = 0; i < 5; i++){	// O(1)
 		cout << i+1 << ": " << answer1.at(i).first << " (" << answer1.at(i).second << " accesos ilegales)" << endl;
 	}
 
 	// ¿Con qué frecuencia aparecen cada uno de los distintos mensajes de error (razón de la falla)?
 	cout << "\n--> Frecuencia de los mensajes de error" << endl;
 	vector<pair<string,int>> answer2 = bitacoraError.keys_freq(); // O(n)
-	for(int i = 0; i < answer2.size(); i++){
+	for(int i = 0; i < answer2.size(); i++){ // O(n)
 		cout << "El error: " << answer2.at(i).first << " se repitio " << answer2.at(i).second << " vez/veces." << endl;
 	}
 
 	// ¿Cuántos números de puertos distintos fueron atacados en total?
 	cout << "\n--> Cuantos numeros de puertos distintos fueron atacados en total?" << endl;
-	int answer3 = bitacoraPorts.keys().size();
+	int answer3 = bitacoraPorts.keys().size(); // O(n)
 	cout << "Numero de Puertos atacados: " << answer3 << endl;
 
 	// ¿En qué semana se detectaron una mayor cantidad de accesos ilegales? Se puede suponer que: 1) una semana inicia el día lunes y termina el domingo, y 2) las fechas de los archivos de bitácoras corresponden al año 2020.
 	cout << "\n--> En que semana se detectaron una mayor cantidad de accesos ilegales?" << endl;
 	vector<pair<int,int>> answer4 = bitacoraSemanas.keys_freq(); // O(n)
-	sort(answer4.begin(), answer4.end(), sort_frq_int);
+	sort(answer4.begin(), answer4.end(), sort_frq_int); // O(n log(n))
 	cout << "Semana: " << answer4.size() << endl;
 
 	return 0;
